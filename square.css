@@ -1,0 +1,27 @@
+.square0 {
+	background-color: red;
+}
+.square1 {
+	background-color: yellow;
+}
+.square2 {
+	background-color: blue;
+}
+.square3 {
+	background-color: green;
+}
+.square4 {
+	background-color: pink;
+}
+.square5 {
+	background-color: white;
+}
+
+.picked {
+	box-shadow: 1px 1px 1px 1px #02FFD6;
+}
+
+#viewport {
+	text-align:center;
+	color:red;
+}
