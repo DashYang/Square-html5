@@ -1,4 +1,4 @@
-# Square-html5
+Square-html5
 ===============
 html5 game
 
