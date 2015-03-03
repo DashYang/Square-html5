@@ -4,3 +4,5 @@ var level = 5
 var lastx = -100 ,lasty = -100;
 var timer = 500 , score = 0;
 var ansx1 = -100 ,ansy1 = -100 , ansx2 = -100 , ansy2 = -100;
+var viewportwidth = 220 , viewportheight = 468;
+
