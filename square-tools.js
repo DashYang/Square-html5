@@ -107,4 +107,34 @@ function createSquares(y1 , x1 , y2 , x2) {
 	lastx = -100 , lasty = -100;
 }
 
-
+function squareHandler(square) {
+	var id = square.id.substring(square.id.indexOf('e') + 1);
+	var columnIndex = id % column , rowIndex = Math.floor(id / column);
+	if (isPicked()) 
+	{
+		var lastSquare = G.O['square'+(lasty * column + lastx)];
+		lastSquare.removeClass('picked').draw();
+		if(isAcceptable(lasty , lastx , rowIndex , columnIndex)) {
+			var x1 = square.x , y1 = square.y , x2 = lastSquare.x , y2 = lastSquare.y;
+			var sx = x1 ,sy = y1 , bx = x2 ,by = y2;
+			if(x2 < x1)
+				sx = x2 , bx = x1;
+			if(y2 < y1)
+				sy = y2 , by= y1;
+			var	columnumber = Math.abs(lastx - columnIndex) + 1;
+			var rownumber = Math.abs(lasty - rowIndex) + 1;
+			score += rownumber * columnumber;
+			timer += score * 0.5
+			G.O.explosion.setVar({x:sx, y:sy , w:bx-sx+25 , h:by-sy+25}).AI('reset').turnOn();
+			clearSquares(lasty , lastx , rowIndex , columnIndex);
+			createSquares(lasty , lastx , rowIndex , columnIndex);
+			if(enable() == false)
+			{
+				initMap();
+				refreshScreen();
+			}
+		}
+	}
+	lasty = rowIndex , lastx = columnIndex;
+	square.addClass("picked").draw();
+}
