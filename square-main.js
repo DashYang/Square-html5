@@ -1,54 +1,34 @@
+var gamestate = "on";
+var map;
+var timer = gametimer;
+var score = 0;
+
 G.F.loadMain = function () {
 	this.AI = G.F.mainAI;
-	var board = document.getElementById("gameboard");
-	G.makeGob('viewport', G , 'div' , board)
-		.setVar({w:viewportwidth, h:viewportheight , nextStyle:{position:'relative'}})
-		.setStyle({backgroundColor:'#000000'}) 
-		.turnOn();
-	var i , j;
-	initMap();
-	for (i = 0 ; i < row ; i ++) 
-	{
-		for(j = 0; j < column ; j ++)
-		{
-			var bigside = squareside + squaremargin;
-			G.makeGob('square'+(i*column+j) , G.O.viewport )
-				.setVar({x:(squareleft + j * bigside), y:(squaretop + i * bigside), h:squareside, w:squareside })
-				.addClass('square'+map[i][j])
-				.turnOn();
-			$("#square"+(i*column+j)).on('touchend',function(e){
-				var id = $(this).attr("id");
-				var square = G.O[id];
-				squareHandler(square);
-		    })
-		}
-	}
-	G.makeGob('help',G , 'div' , board)
-		.setVar({w:viewportwidth , h:helpheight , nextStyle:{position:'relative'}})
-		.setSrc('time left:' + timer + " score:" + score)
-		.setStyle({backgroundColor:'#666666'})
-		.turnOn();
-
-	G.makeGob('explosion',G.O.viewport)
-		.setState({frame:0})
-		.setVar({x:-100, y:-100, w:4, h:12, AI:G.F.explosionAI})
-		.setStyle({border:'3px solid red'})
-		.turnOn();
+	resetGame();
 }; 
 
 G.F.mainAI = function () {
 	timer -= 1;
 	G.O.explosion.AI();
-	if(timer <= 0) {
+	if(timer <= 0 && gamestate == "on") {
 		clearSquares(0 , 0 , row , column);
 		G.O.viewport.setStyle({backgroundColor:'#000000'}).
-		setSrc('<br><br><br><br>Game Over!<br>you got <strong>'+ score + "<strong>").draw();
-		G.O.help.setStyle({backgroundColor:'#000000'}).draw();
-
+		setSrc('<br><br><h1>Game Over</h1><h3>you got</h3><h1>'+ score + "</h1><h2>Click</h2><h3>to</h3><h1>restart</h1>").draw();
+	//	G.O.help.setStyle({backgroundColor:'#000000'}).draw();
+		gamestate = "off";
+		document.title = "I got " + score + "in Square Game,Can you beat me?";
 	}else if(timer > 0) {
 		squareManage();		
-		var help = G.O['help'];
-		help.setSrc('<center>time left:' + Math.floor(timer/25) + " score:" + score +"<center>" ).draw();
+		var timebar = G.O['time'];
+		timebar.setSrc("<p>T i m e<br>" + (Math.floor(timer/25) + 1) + "</p>" ).draw();
+		var scorebar = G.O['score'];
+		scorebar.setSrc("<p>S c o r e</br>" + score + "</p>" ).draw();
+			
+	}
+
+	if(G.O.viewport.tagContainsMouseClick() && gamestate == "off"){
+		resetGame();
 	}
 };
 

@@ -1,20 +1,26 @@
 .square0 {
 	background-color: #990066;
+	border-radius: 1px;
 }
 .square1 {
 	background-color: #FFCC00;
+	border-radius: 1px;
 }
 .square2 {
 	background-color: #CC0033;
+	border-radius: 1px;
 }
 .square3 {
 	background-color: #333399;
+	border-radius: 1px;
 }
 .square4 {
 	background-color: #009999;
+	border-radius: 1px;
 }
 .square5 {
 	background-color: white;
+	border-radius: 1px;
 }
 
 .picked {
@@ -24,4 +30,10 @@
 #viewport {
 	text-align:center;
 	color:red;
+}
+
+.help{
+	border-radius: 1px;
+	color:black;
+
 }

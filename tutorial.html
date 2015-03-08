@@ -1,18 +1,18 @@
-<!DOCTYPE HTML>
+﻿<!DOCTYPE HTML>
 <html>
 	<head>
-		<!-- �� Bootstrap ���� CSS �ļ� -->
+		<!-- 新 Bootstrap 核心 CSS 文件 -->
 		<link rel="stylesheet"
 		href="http://cdn.bootcss.com/bootstrap/3.3.2/css/bootstrap.min.css">
 
-		<!-- ��ѡ��Bootstrap�����ļ���һ�㲻�����룩 -->
+		<!-- 可选的Bootstrap主题文件（一般不用引入） -->
 		<link rel="stylesheet"
 		href="http://cdn.bootcss.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
 
-		<!-- jQuery�ļ��������bootstrap.min.js ֮ǰ���� -->
+		<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
 		<script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
 
-		<!-- ���µ� Bootstrap ���� JavaScript �ļ� -->
+		<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 		<script src="http://cdn.bootcss.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
 		<script type="text/javascript" src="zepto.min.js"></script>
@@ -20,25 +20,26 @@
 		<meta
 		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes"
 		name="viewport" />
+		
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 
 		<link rel="stylesheet" href="square.css" type="text/css">
-		<title>Square Game</title>
+		<title>tutorial</title>
 		<link type="image/x-icon" rel="shortcut icon" href="icon.ico" />
 	</head>	
 	<body>
 		<div class='container'>
 			<div class='row'>
 				<div id="gameboard" style="width:250px;margin-left:auto;margin-right:auto">
-					<a href="tutorial.html" class="btn btn-info btn-xs">tutorial</a>
+					<a href="square.html" class="btn btn-info btn-xs">back</a>
+					<div id="viewport" style="color:black;text-align:left">
+						在图中找出四个角的方块颜色一致的矩形，如图中的1,2,3,4为构成矩形的四个角
+						<img src="t1.png" alt="pic1" class="img-rounded">
+						点击1,4或2,3.可以消除整块区域，得到分数和时间奖励！<br>
+						去寻找更多这样的矩形完成消除吧！
+					</div>
 				</div>
 			</div>
 		</div>
-		<script type="text/javascript" src="gmp-engine.1.7.4.js"></script>
-		<script type="text/javascript" src="square-tools.js"></script>
-		<script type="text/javascript" src="square-config.js"></script>
-		<script type="text/javascript" src="square-ai.js"></script>
-		<script type="text/javascript" src="zepto.min.js"></script>
-		<script type="text/javascript" src="square-main.js"></script>
 	</body>
 </html>
-

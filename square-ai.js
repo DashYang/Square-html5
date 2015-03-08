@@ -5,12 +5,12 @@ function squareManage() {
 		{
 			var square = G.O['square'+(i * column + j)];
 			
-			if ( square.tagContainsMouseClick() /*|| touchSquareId == (i * column + j)*/)
+			if ( square.tagContainsMouseClick() )
 			{
 				squareHandler(square);
 			}
 		}
-	}
+	}	
 }
 
 G.F.explosionAI = function (cmd) {

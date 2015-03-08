@@ -45,8 +45,8 @@ function enable(){
 				for(x2 = x1 + 1; x2 < column ; x2++)
 				{
 					if(map[y1][x1] == map[y1][x2] &&
-						map[y1][x2] == map[y2][x1] &&
-						map[y2][x1] == map[y2][x2])
+							map[y1][x2] == map[y2][x1] &&
+							map[y2][x1] == map[y2][x2])
 					{
 						ansx1 = x1 , ansy1 = y1 , ansx2 = x2 , ansy2 = y2;
 						return true;
@@ -57,21 +57,21 @@ function enable(){
 	}
 	return false;
 }
-function isPicked() {
-	if (lastx != -100 && lasty != -100) 
-		return true;
-	return false;
-}
-
-function isAcceptable(y1 , x1 , y2 , x2) {
-	if(x1 == x2 || y1 == y2)
+	function isPicked() {
+		if (lastx != -100 && lasty != -100) 
+			return true;
 		return false;
-	if(map[y1][x1] == map[y1][x2] 
-			&& map[y1][x2] == map[y2][x2]
-			&& map[y2][x2] == map[y2][x1])
-		return true;
-	return false
-}
+	}
+
+	function isAcceptable(y1 , x1 , y2 , x2) {
+		if(x1 == x2 || y1 == y2)
+			return false;
+		if(map[y1][x1] == map[y1][x2] 
+				&& map[y1][x2] == map[y2][x2]
+				&& map[y2][x2] == map[y2][x1])
+			return true;
+		return false
+	}
 
 function clearSquares(y1, x1 , y2, x2) {
 	var sx = x1 ,sy = y1 ,bx = x2 , by = y2;
@@ -124,7 +124,7 @@ function squareHandler(square) {
 			var	columnumber = Math.abs(lastx - columnIndex) + 1;
 			var rownumber = Math.abs(lasty - rowIndex) + 1;
 			score += rownumber * columnumber;
-			timer += score * 0.5
+			timer += 125;   //bonus time : 5s
 			G.O.explosion.setVar({x:sx, y:sy , w:bx-sx+25 , h:by-sy+25}).AI('reset').turnOn();
 			clearSquares(lasty , lastx , rowIndex , columnIndex);
 			createSquares(lasty , lastx , rowIndex , columnIndex);
@@ -137,4 +137,58 @@ function squareHandler(square) {
 	}
 	lasty = rowIndex , lastx = columnIndex;
 	square.addClass("picked").draw();
+}
+
+function resetGame() {
+	$("#viewport").remove();
+	gamestate = "on";
+	timer = gametimer;
+	score = 0;
+	board = document.getElementById("gameboard");
+	G.makeGob('viewport', G , 'div' , board)
+		.setVar({w:viewportwidth, h:viewportheight , nextStyle:{position:'relative'}})
+		.setStyle({backgroundColor:'#000000'}) 
+		.turnOn();
+	$("#viewport").on('touchend',function(e){
+			if(gamestate == "off") {
+				resetGame();
+			}})
+	var i , j;
+	initMap();
+	var bigside = squareside + squaremargin;
+	for (i = 0 ; i < row ; i ++) 
+	{
+		for(j = 0; j < column ; j ++)
+		{
+			G.makeGob('square'+(i*column+j) , G.O.viewport )
+				.setVar({x:(squareleft + j * bigside), y:(squaretop + i * bigside), h:squareside, w:squareside })
+				.addClass('square'+map[i][j])
+				.turnOn();
+			$("#square"+(i*column+j)).on('touchend',function(e){
+					var id = $(this).attr("id");
+					var square = G.O[id];
+					squareHandler(square);
+					})
+		}
+	}
+	var helpwidth = (column*bigside - squaremargin)/2;
+	G.makeGob('time', G.O.viewport)
+		.setVar({x:squareleft , y:(squaretop + row * bigside),w:(helpwidth - 2) , h:helpheight })
+		.setSrc("<p>T i m e<br>" + (Math.floor(timer/25) + 1) + "</p>")
+		.addClass('help')
+		.setStyle({backgroundColor:'#666666'})
+		.turnOn();
+
+	G.makeGob('score', G.O.viewport)
+		.setVar({x:squareleft +  helpwidth + 2, y:(squaretop + row * bigside),w:helpwidth -2 , h:helpheight })
+		.setSrc("<p>S c o r e</br>" + score + "</p>")
+		.addClass('help')
+		.setStyle({backgroundColor:'#666666'})
+		.turnOn();
+
+	G.makeGob('explosion',G.O.viewport)
+		.setState({frame:0})
+		.setVar({x:-100, y:-100, w:4, h:12, AI:G.F.explosionAI})
+		.setStyle({border:'3px solid red'})
+		.turnOn();
 }
