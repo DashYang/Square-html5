@@ -5,7 +5,7 @@ function squareManage() {
 		{
 			var square = G.O['square'+(i * column + j)];
 			
-			if ( square.tagContainsMouseClick() )
+			if ( square.tagContainsMouseClick() && isTouched == false)
 			{
 				squareHandler(square);
 			}

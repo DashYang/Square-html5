@@ -147,14 +147,63 @@ function resetGame() {
 	board = document.getElementById("gameboard");
 	G.makeGob('viewport', G , 'div' , board)
 		.setVar({w:viewportwidth, h:viewportheight , nextStyle:{position:'relative'}})
-		.setStyle({backgroundColor:'#000000'}) 
 		.turnOn();
 	$("#viewport").on('touchend',function(e){
+			isTouched = true;
 			if(gamestate == "off") {
 				resetGame();
 			}})
 	var i , j;
 	initMap();
+	var bigside = squareside + squaremargin;
+	var tutorialboardWidth = (column*bigside) - squaremargin;
+	var tutorialboardHeight =(row * bigside) - squaremargin; 
+	G.makeGob('tutorialboard' , G.O.viewport)
+		.setVar({x:squareleft,y:squaretop,w:tutorialboardWidth,h:tutorialboardHeight})
+		.addClass("tutorialboardOff")	
+		.turnOn();
+		
+	resumeGame();
+	var helpwidth = (column*bigside - squaremargin)/2;
+	G.makeGob('tutorial', G.O.viewport)
+		.setVar({x:squareleft , y:(squaretop + row * bigside),w:(helpwidth - 2) , h:helpheight })
+		.setSrc("<div class='tutorial'>tutorial</div>")
+		.addClass('help')
+		.turnOn();
+	$("#tutorial").on('touchend',function(e){
+			isTouched = true;
+			if(gamestate == "on") 
+				popTutorial();
+			else if (gamestate == "pause")
+				resumeGame();
+			})
+
+	G.makeGob('dashboard', G.O.viewport)
+		.setVar({x:squareleft +  helpwidth + 2, y:(squaretop + row * bigside),w:helpwidth -2 , h:helpheight })
+		.addClass('help')
+		.turnOn();
+
+	G.makeGob('explosion',G.O.viewport)
+		.setState({frame:0})
+		.setVar({x:-100, y:-100, w:4, h:12, AI:G.F.explosionAI})
+		.setStyle({border:'3px solid red'})
+		.turnOn();		
+}
+
+function popTutorial() {
+	gamestate = "pause";
+	clearSquares(0 , 0 , row , column);
+	var bigside = squareside + squaremargin
+	G.O.tutorialboard.setSrc("<center><h3>tutorial</h3><center>find a rectangle in this picture which has the same four squares<img src='t1.png' alt='pic1' class='img-rounded'><br>click 1,4 or 2,3 to get scores and bonus time!").swapClass("tutorialboardOff" , "tutorialboardOn").draw();
+	G.O.tutorial.setSrc("<p class='tutorial'>resume</p>").draw();
+}
+
+function resumeGame() {
+	if(gamestate == "pause") {
+		gamestate = "on";
+		G.O.tutorialboard.setSrc("").swapClass("tutorialboardOn" , "tutorialboardOff").draw();
+		G.O.tutorial.setSrc("<p class='tutorial'>tutorial</p>").draw();
+	}
 	var bigside = squareside + squaremargin;
 	for (i = 0 ; i < row ; i ++) 
 	{
@@ -165,30 +214,11 @@ function resetGame() {
 				.addClass('square'+map[i][j])
 				.turnOn();
 			$("#square"+(i*column+j)).on('touchend',function(e){
+					isTouched = true;
 					var id = $(this).attr("id");
 					var square = G.O[id];
 					squareHandler(square);
 					})
 		}
 	}
-	var helpwidth = (column*bigside - squaremargin)/2;
-	G.makeGob('time', G.O.viewport)
-		.setVar({x:squareleft , y:(squaretop + row * bigside),w:(helpwidth - 2) , h:helpheight })
-		.setSrc("<p>T i m e<br>" + (Math.floor(timer/25) + 1) + "</p>")
-		.addClass('help')
-		.setStyle({backgroundColor:'#666666'})
-		.turnOn();
-
-	G.makeGob('score', G.O.viewport)
-		.setVar({x:squareleft +  helpwidth + 2, y:(squaretop + row * bigside),w:helpwidth -2 , h:helpheight })
-		.setSrc("<p>S c o r e</br>" + score + "</p>")
-		.addClass('help')
-		.setStyle({backgroundColor:'#666666'})
-		.turnOn();
-
-	G.makeGob('explosion',G.O.viewport)
-		.setState({frame:0})
-		.setVar({x:-100, y:-100, w:4, h:12, AI:G.F.explosionAI})
-		.setStyle({border:'3px solid red'})
-		.turnOn();
 }
