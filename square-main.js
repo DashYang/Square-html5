@@ -3,10 +3,13 @@ var map;
 var timer = gametimer;
 var score = 0;
 var isTouched = false;
+var startFlag = true;
+var level = maxLevel;
 
 G.F.loadMain = function () {
 	this.AI = G.F.mainAI;
 	resetGame();
+	popTutorial();
 }; 
 
 G.F.mainAI = function () {

@@ -3,8 +3,7 @@ function squareManage() {
 	{
 		for(var j = 0; j < column; j ++)
 		{
-			var square = G.O['square'+(i * column + j)];
-			
+			var square = G.O['square'+(i * column + j)];	
 			if ( square.tagContainsMouseClick() && isTouched == false)
 			{
 				squareHandler(square);

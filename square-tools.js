@@ -26,16 +26,20 @@ function initMap() {
 
 function refreshScreen() {
 	for(var i = 0 ; i < row ; i ++)
-		for(var j = 0 ; j <= column ; j ++)
+		for(var j = 0 ; j < column ; j ++)
 		{
 			var square = G.O['square'+(i * column + j)];
-			square.swapClass(square.tag.className , 'square' + map[i][j]).draw()
+			if (square == undefined)
+				console.log(i + " " + j)
+			square.swapClass(square.tag.className , 'square' + map[i][j]).draw();
+			
 		}
 
 }
 
 function enable(){
 	var x1, y1 , x2 ,y2;
+	var count = 0
 	for(y1 = 0 ; y1 < row ; y1++)
 	{
 		for(x1 = 0 ; x1 < column ; x1++)
@@ -49,13 +53,13 @@ function enable(){
 							map[y2][x1] == map[y2][x2])
 					{
 						ansx1 = x1 , ansy1 = y1 , ansx2 = x2 , ansy2 = y2;
-						return true;
+						count += 1;
 					}
 				}
 			}
 		}
 	}
-	return false;
+	return count;
 }
 	function isPicked() {
 		if (lastx != -100 && lasty != -100) 
@@ -128,11 +132,13 @@ function squareHandler(square) {
 			G.O.explosion.setVar({x:sx, y:sy , w:bx-sx+25 , h:by-sy+25}).AI('reset').turnOn();
 			clearSquares(lasty , lastx , rowIndex , columnIndex);
 			createSquares(lasty , lastx , rowIndex , columnIndex);
-			if(enable() == false)
+			if(level > 1 & score > (maxLevel - level + 1) * 100)
+				level -= 1;
+		    while(enable() < level - 1)
 			{
 				initMap();
-				refreshScreen();
 			}
+			refreshScreen();
 		}
 	}
 	lasty = rowIndex , lastx = columnIndex;
@@ -155,6 +161,10 @@ function resetGame() {
 			}})
 	var i , j;
 	initMap();
+	while(enable() < level - 1)
+	{
+		initMap();
+	}
 	var bigside = squareside + squaremargin;
 	var tutorialboardWidth = (column*bigside) - squaremargin;
 	var tutorialboardHeight =(row * bigside) - squaremargin; 
@@ -167,7 +177,7 @@ function resetGame() {
 	var helpwidth = (column*bigside - squaremargin)/2;
 	G.makeGob('tutorial', G.O.viewport)
 		.setVar({x:squareleft , y:(squaretop + row * bigside),w:(helpwidth - 2) , h:helpheight })
-		.setSrc("<div class='tutorial'>tutorial</div>")
+		.setSrc("<div class='tutorial'>HELP!</div>")
 		.addClass('help')
 		.turnOn();
 	$("#tutorial").on('touchend',function(e){
@@ -195,14 +205,21 @@ function popTutorial() {
 	clearSquares(0 , 0 , row , column);
 	var bigside = squareside + squaremargin
 	G.O.tutorialboard.setSrc("<center><h3>tutorial</h3><center>find a rectangle in this picture which has the same four squares<img src='t1.png' alt='pic1' class='img-rounded'><br>click 1,4 or 2,3 to get scores and bonus time!").swapClass("tutorialboardOff" , "tutorialboardOn").draw();
-	G.O.tutorial.setSrc("<p class='tutorial'>resume</p>").draw();
+	var tipInfo = "";
+	if (startFlag == true) {
+		tipInfo = "<p class='tutorial'>start</p>";
+		startFlag = false;
+	}
+	else 
+		tipInfo = "<p class='tutorial'>resume</p>";
+	G.O.tutorial.setSrc(tipInfo).draw();
 }
 
 function resumeGame() {
 	if(gamestate == "pause") {
 		gamestate = "on";
 		G.O.tutorialboard.setSrc("").swapClass("tutorialboardOn" , "tutorialboardOff").draw();
-		G.O.tutorial.setSrc("<p class='tutorial'>tutorial</p>").draw();
+		G.O.tutorial.setSrc("<p class='tutorial'>HELP!</p>").draw();
 	}
 	var bigside = squareside + squaremargin;
 	for (i = 0 ; i < row ; i ++) 

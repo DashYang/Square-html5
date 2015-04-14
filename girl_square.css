@@ -43,13 +43,17 @@
 }
 
 .help{
-	/*border-radius: 1px;*/
 	text-align:center;
 }
 
+#tutorial {
+	border-radius: 5px;
+	background-color:#7FFFD4;
+}
+
 .help .tutorial{
-	font-size:36px;
-	background-color:
+	font-size:32px;
+	font-weight:bold;
 }
 
 .help .time{
