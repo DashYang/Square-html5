@@ -7,3 +7,4 @@ var viewportwidth = 300 , viewportheight = 520;
 var squareside = 40 , squaremargin = 4;
 var squaretop = 18, squareleft = 20;
 var helpheight = 48;
+var bonusTime = 50 //2s

@@ -128,7 +128,7 @@ function squareHandler(square) {
 			var	columnumber = Math.abs(lastx - columnIndex) + 1;
 			var rownumber = Math.abs(lasty - rowIndex) + 1;
 			score += rownumber * columnumber;
-			timer += 125;   //bonus time : 5s
+			timer += bonusTime;   //bonus time : 5s
 			G.O.explosion.setVar({x:sx, y:sy , w:bx-sx+25 , h:by-sy+25}).AI('reset').turnOn();
 			clearSquares(lasty , lastx , rowIndex , columnIndex);
 			createSquares(lasty , lastx , rowIndex , columnIndex);
@@ -154,11 +154,6 @@ function resetGame() {
 	G.makeGob('viewport', G , 'div' , board)
 		.setVar({w:viewportwidth, h:viewportheight , nextStyle:{position:'relative'}})
 		.turnOn();
-	$("#viewport").on('touchend',function(e){
-			isTouched = true;
-			if(gamestate == "off") {
-				resetGame();
-			}})
 	var i , j;
 	initMap();
 	while(enable() < level - 1)
@@ -177,7 +172,7 @@ function resetGame() {
 	var helpwidth = (column*bigside - squaremargin)/2;
 	G.makeGob('tutorial', G.O.viewport)
 		.setVar({x:squareleft , y:(squaretop + row * bigside),w:(helpwidth - 2) , h:helpheight })
-		.setSrc("<div class='tutorial'>HELP!</div>")
+		.setSrc("<div class='tutorial'>教程</div>")
 		.addClass('help')
 		.turnOn();
 	$("#tutorial").on('touchend',function(e){
@@ -186,7 +181,10 @@ function resetGame() {
 				popTutorial();
 			else if (gamestate == "pause")
 				resumeGame();
-			})
+			else if (gamestate == "off") {
+				resetGame();
+			}
+	});
 
 	G.makeGob('dashboard', G.O.viewport)
 		.setVar({x:squareleft +  helpwidth + 2, y:(squaretop + row * bigside),w:helpwidth -2 , h:helpheight })
@@ -204,14 +202,18 @@ function popTutorial() {
 	gamestate = "pause";
 	clearSquares(0 , 0 , row , column);
 	var bigside = squareside + squaremargin
-	G.O.tutorialboard.setSrc("<center><h3>tutorial</h3><center>find a rectangle in this picture which has the same four squares<img src='t1.png' alt='pic1' class='img-rounded'><br>click 1,4 or 2,3 to get scores and bonus time!").swapClass("tutorialboardOff" , "tutorialboardOn").draw();
+	G.O.tutorialboard.setSrc("<center><h3>教程</h3><center>" +
+			"八块腹肌的孙小喵为了修炼成一代剑神，踏上了试炼之路！试炼的规则如下 " +
+			"在画面里找出四个具有同样颜色顶角的矩形 " +
+			"<img src='t1.png' alt='pic1' class='img-rounded'><br>" +
+			"点击如图中标记为1,4或者2,3的方块去获取功力值，并且获得更长的修炼时间！!").swapClass("tutorialboardOff" , "tutorialboardOn").draw();
 	var tipInfo = "";
 	if (startFlag == true) {
-		tipInfo = "<p class='tutorial'>start</p>";
+		tipInfo = "<p class='tutorial'>开始</p>";
 		startFlag = false;
 	}
 	else 
-		tipInfo = "<p class='tutorial'>resume</p>";
+		tipInfo = "<p class='tutorial'>继续</p>";
 	G.O.tutorial.setSrc(tipInfo).draw();
 }
 
@@ -219,7 +221,7 @@ function resumeGame() {
 	if(gamestate == "pause") {
 		gamestate = "on";
 		G.O.tutorialboard.setSrc("").swapClass("tutorialboardOn" , "tutorialboardOff").draw();
-		G.O.tutorial.setSrc("<p class='tutorial'>HELP!</p>").draw();
+		G.O.tutorial.setSrc("<p class='tutorial'>教程</p>").draw();
 	}
 	var bigside = squareside + squaremargin;
 	for (i = 0 ; i < row ; i ++) 
